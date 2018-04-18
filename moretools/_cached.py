@@ -33,7 +33,11 @@ from ._common import *
 
 def cached(func):
     argspec = getargspec(func)
-    if not argspec.keywords:
+    try:  # Python >= 3.5
+        varkw = argspec.varkw
+    except AttributeError:
+        varkw = argspec.keywords
+    if not varkw:
         nargs = len(argspec.args)
         varargs = argspec.varargs
         if not nargs and not varargs:
