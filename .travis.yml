@@ -16,5 +16,5 @@ install:
 
 script:
   - zetup pytest
-  - py.test -v test/
+  - py.test -vv test/
   - zetup tox
