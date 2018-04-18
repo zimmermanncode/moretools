@@ -1,3 +1,3 @@
-zetup >= 0.2.31
+zetup >= 0.2.43
 six >= 1.10
 decorator >= 4.0

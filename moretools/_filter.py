@@ -31,6 +31,21 @@ from ._common import _map, _filter
 from ._undefined import undefined
 
 
+class Filter(object):
+    def __init__(self, func):
+        self.func = func
+        try:
+            self.__name__ = func.__name__
+        except AttributeError:
+            pass
+
+    def __call__(self, seq):
+        return _filter(self.func, seq)
+
+    def __ror__(self, seq):
+        return self(seq)
+
+
 def filter(func, seq=undefined):
     """Replacement for builtin filter().
 
@@ -51,6 +66,8 @@ def filter(func, seq=undefined):
         filtered_seq = func(seq)
     """
     if seq is undefined:
+        return Filter(func)
+
         def filter(seq):
             return _filter(func, seq)
 

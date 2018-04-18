@@ -37,6 +37,13 @@ __import__('zetup').toplevel(__name__, [
     'isbooltype': 'isboolclass',
 })
 
+def qualname(cls):
+    try:
+        return cls.__qualname__
+    except AttributeError:
+        return cls.__name__
+
+
 from ._map import *
 from .mapping import *
 from ._repeat import *
@@ -64,12 +71,25 @@ from ._log import *
 from ._xmlrpc import *
 from ._types import *
 from ._operator import *
+from ._context import *
 
 
-def qualname(cls):
-    """Get ``cls.__qualname__`` with fallback to ``cls.__name__``.
-    """
-    try:
-        return cls.__qualname__
-    except AttributeError:
-        return cls.__name__
+from six.moves import map as _map
+
+
+class map(object):
+    def __init__(self, func):
+        self.func = func
+
+    def __call__(self, seq):
+        return _map(self.func, seq)
+
+    def __ror__(self, seq):
+        return self(seq)
+
+
+class _(type(is_), type(take)):
+    pass
+
+
+_ = _(is_.op)

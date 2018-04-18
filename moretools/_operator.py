@@ -1,12 +1,40 @@
-__all__ = ['not_']
+# extended by op() and logic_op() below
+__all__ = ['take', 'div', 'not_']
 
 import operator
 
+from ._operand import Operand
 from ._tester import Tester, NotTester
 
 
 def not_(value):
     return not value
+
+
+def op(func):
+    if isinstance(func, str):
+        name = func
+        logic = getattr(operator, func)
+    else:
+        name = func.__name__
+
+    __all__.append(name)
+
+    opclass = Operand[logic]
+
+    def op(value, *right):
+        if right:
+            return logic(value, *right)
+        return opclass(value)
+
+    op.__name__ = name
+    return op
+
+
+add = op('add')
+sub = op('sub')
+mul = op('mul')
+div = truediv = op('truediv')
 
 
 def logic_op(logic):
@@ -50,4 +78,5 @@ in_ = logic_op(in_)
 contains = logic_op('contains')
 
 
-from ._is import *
+from ._take import take
+from ._is import is_, is_not
