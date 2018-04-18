@@ -9,11 +9,14 @@ __pycache__/
 ^build/
 ^dist/
 \.egg-info
+^\.eggs/
 ^\.conda/
 ^\.tox/
 
 \.scon[sf]
 
+^\.idea/
+\.sublime-*
 ^\$tf/
 ^BuildProcessTemplates/
 \.sln$
