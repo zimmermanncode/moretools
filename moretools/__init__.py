@@ -1,35 +1,39 @@
-# python-moretools
+# MOREtools >>> MORE Overly Reusable Essentials for python
 #
-# many more basic tools for python 2/3
-# extending itertools, functools and operator
+# Copyright (C) 2011-2019 Stefan Zimmermann <user@zimmermann.co>
 #
-# Copyright (C) 2011-2016 Stefan Zimmermann <zimmermann.code@gmail.com>
-#
-# python-moretools is free software: you can redistribute it and/or modify
+# MOREtools is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# python-moretools is distributed in the hope that it will be useful,
+# MOREtools is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public License
-# along with python-moretools.  If not, see <http://www.gnu.org/licenses/>.
+# along with MOREtools.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Many more basic tools for Python 2/3
-   extending itertools, functools and operator.
-"""
+"""MOREtools >>> MORE Overly Reusable Essentials for python."""
+
 __import__('zetup').toplevel(__name__, [
-    'qualname',
+    'SimpleTree',
     'StrictBool',
+    'dictitems',
+    'dictkeys',
+    'dictvalues',
+    'isboolclass',
+    'isbool',
+    'qualname',
+    'simpledict',
+    'strictbool',
     # TODO: fill in rest!
 ], aliases={
     # six-like aliases for dict... functions
+    'iteritems': 'dictitems',
     'iterkeys': 'dictkeys',
     'itervalues': 'dictvalues',
-    'iteritems': 'dictitems',
 }, deprecated_aliases={
     'Bool': 'StrictBool',
     'boolclass': 'strictbool',
@@ -37,12 +41,16 @@ __import__('zetup').toplevel(__name__, [
     'isbooltype': 'isboolclass',
 })
 
+
 def qualname(cls):
     try:
         return cls.__qualname__
     except AttributeError:
         return cls.__name__
 
+
+from .boolean import StrictBool, isboolclass, isbool, strictbool
+from .func import func_types, getfunc, isfunc
 
 from ._map import *
 from .mapping import *
@@ -57,7 +65,6 @@ from ._pop import *
 from ._set import *
 from ._has import *
 from ._del import *
-from ._bool import *
 from ._collections import *
 from ._simpledict import *
 from ._dict import *
@@ -72,7 +79,7 @@ from ._xmlrpc import *
 from ._types import *
 from ._operator import *
 from ._context import *
-
+from ._simpletree import *
 
 from six.moves import map as _map
 
