@@ -1,47 +1,46 @@
-# python-moretools
+# MOREtools | MORE Overly Reusable Essentials for Python
 #
-# many more basic tools for python 2/3
-# extending itertools, functools and operator
+# Copyright (C) 2011-2019 Stefan Zimmermann <user@zimmermann.co>
 #
-# Copyright (C) 2011-2016 Stefan Zimmermann <zimmermann.code@gmail.com>
-#
-# python-moretools is free software: you can redistribute it and/or modify
+# MOREtools is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# python-moretools is distributed in the hope that it will be useful,
+# MOREtools is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public License
-# along with python-moretools.  If not, see <http://www.gnu.org/licenses/>.
+# along with MOREtools.  If not, see <http://www.gnu.org/licenses/>.
 
-"""moretools._bool
+"""
+Tools for creating custom bool classes.
 
-Tools for creating custom bool classes
-with explicit ``.true`` and ``.false`` lists of valid instantiation values.
+With explicit ``.true`` and ``.false`` lists of valid instantiation values
 
 .. moduleauthor:: Stefan Zimmermann <zimmermann.code@gmail.com>
 """
+
 from six import with_metaclass
 from inspect import isclass
 
 import moretools
 
-__all__ = ['StrictBoolMeta', 'StrictBool', 'strictbool',
-           'isboolclass', 'isbool']
+__all__ = ('StrictBool', 'isboolclass', 'isbool', 'strictbool')
 
 
 class StrictBoolMeta(type):
-    """Metaclass for :class:`moretools.StrictBool`
-       and base metaclass used in :func:`moretools.strictbool` class creator.
-
-    - Makes :class:`moretools.StrictBool`-derived classes behave
-      like builtin ``bool`` when used for ``isinstance()``
-      and ``issubclass()`` checks.
     """
+    Metaclass for :class:`moretools.StrictBool`.
+
+    And base metaclass used in :func:`moretools.strictbool` class creator
+
+    Makes :class:`moretools.StrictBool`-derived classes behave like built-in
+    ``bool`` when used for ``isinstance()`` and ``issubclass()`` checks.
+    """
+
     true = false = None
 
     def __subclasscheck__(cls, other):
@@ -51,8 +50,10 @@ class StrictBoolMeta(type):
         return type(obj) is bool or type.__instancecheck__(cls, obj)
 
     def __contains__(cls, value):
-        """Check if `value` is a valid initialization value for
-           :class:`moretools.StrictBool`-derived `cls`.
+        """
+        Check if `value` is a valid initialization value.
+
+        For the :class:`moretools.StrictBool`-derived `cls`
         """
         return isbool(value) or value in cls.true or value in cls.false
 
@@ -66,6 +67,10 @@ class StrictBool(with_metaclass(StrictBoolMeta, int)):
     - Also used as base class by :func:`moretools.strictbool` class creator.
     - By default, instantiation results in a builtin bool value.
     """
+
+    # used by zetup.meta's class __repr__ instead of __module__
+    __package__ = moretools.__package__
+
     def __new__(cls, value):
         if cls is StrictBool:
             raise TypeError("Can't instantiate abstract %s" % repr(cls))
@@ -129,9 +134,34 @@ def strictbool(typename='Bool', true=None, false=None, base=StrictBool):
 strictbool.base = StrictBool
 
 
+#: All kinds of boolean types.
+bool_types = (bool, StrictBool)
+
+
 def isboolclass(cls):
-    """Check if `cls` is builtin ``bool``
-       or a :class:`moretools.StrictBool`-derived class.
+    """
+    Check if `cls` is built-in ``bool`` or bool-like.
+
+    Which includes all types in :const:`moretools.bool_types`:
+
+    >>> from moretools import StrictBool, isboolclass, strictbool
+
+    >>> isboolclass(bool)
+    True
+
+    >>> isboolclass(StrictBool)
+    True
+
+    >>> OtherBool = strictbool('OtherBool', true=['yes'], false=['no'])
+    >>> isboolclass(OtherBool)
+    True
+
+    Checking a non-class object results in a ``TypeError``:
+
+    >>> isboolclass(True)
+    Traceback (most recent call last):
+    ...
+    TypeError: isboolclass() arg must be a class
     """
     if not isclass(cls):
         raise TypeError("isboolclass() arg must be a class")
@@ -139,7 +169,10 @@ def isboolclass(cls):
 
 
 def isbool(obj):
-    """Check if `obj` is a builtin ``bool`` instance
-       (or an instance of a :func:`moretools.StrictBool`-derived class).
+    """
+    Check if `obj` is a built-in ``bool`` or any bool-like instance.
+
+    Which means being an instance of any type in
+    :const:`moretools.bool_types`
     """
     return isinstance(obj, (bool, StrictBool))
