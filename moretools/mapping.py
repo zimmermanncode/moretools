@@ -18,45 +18,54 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with python-moretools.  If not, see <http://www.gnu.org/licenses/>.
 
-"""moretools.mapping
-
+"""
 Functions for mapping sequence elements to their attrs, items or calls.
 
 .. moduleauthor:: Stefan Zimmermann <zimmermann.code@gmail.com>
 """
-__all__ = ['mapattr', 'mapitem', 'mapcall']
 
 from ._undefined import undefined
 from ._get import getitem
 
+__all__ = ('mapattr', 'mapcall', 'mapitem')
+
 
 def mapattr(seq, attr, default=undefined):
-    """Map each element of `seq` to its attribute `attr`.
+    """
+    Map each element of `seq` to its attribute `attr`.
 
-    - Optionally takes a `default` value for elements missing given `attr`.
-      Otherwise an AttributeError is raised.
+    Optionally takes a `default` value for elements missing given `attr`.
+    Otherwise an AttributeError is raised
+
+    :return: A generator
     """
     if default is undefined:
         for item in seq:
             yield getattr(item, attr)
+
     else:
         for item in seq:
             yield getattr(item, attr, default)
 
 
 def mapitem(seq, key, default=undefined):
-    """Map each element of `seq` to element[`key`].
+    """
+    Map each element of `seq` to element[`key`].
 
-    - Optionally takes a `default` value for elements
-      which raise an IndexError or KeyError for the given `key`.
+    Optionally takes a `default` value for elements which raise an IndexError
+    or KeyError for the given `key`.
+
+    :return: A generator
     """
     for item in seq:
         yield getitem(item, key, default)
 
 
 def mapcall(seq, *args, **kwargs):
-    """Map each element of `seq` to a call of the element
-       with given `args` and `kwargs`.
+    """
+    Map each element of `seq` to its call result with `args` and `kwargs`.
+
+    :return: A generator
     """
     for item in seq:
         yield item(*args, **kwargs)
