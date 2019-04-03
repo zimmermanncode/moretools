@@ -4,10 +4,10 @@ Test moretools for creating custom bool classes.
 .. moduleauthor:: Stefan Zimmermann <zimmermann.code@gmail.com>
 """
 
-from moretools import StrictBool, StrictBoolMeta, strictbool, \
-    isboolclass, isbool
-
 import pytest
+
+from moretools import StrictBool, isboolclass, isbool, strictbool
+from moretools.boolean import StrictBoolMeta
 
 
 class TestStrictBool(object):
