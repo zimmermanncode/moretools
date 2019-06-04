@@ -3,12 +3,46 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
 from inspect import isclass
 
-from six import reraise, with_metaclass
+from six import PY2, reraise, with_metaclass
 import zetup
 
 import moretools
+from moretools import qualname
+
+from ._cached import cached
 
 __all__ = ('SimpleTree', )
+
+
+class ContextStack(zetup.object):
+
+    def __init__(self, _type):
+        self._list = []
+        self._type = _type
+
+    def __contains__(self, tree):
+        if not isinstance(tree, self._type):
+            raise TypeError(
+                "{!r} is for instances of {!r}, not {!r}"
+                .format(self, self._type, type(tree)))
+
+        for item in self._list:
+            if item is tree:
+                return True
+
+        return False
+
+    def __iter__(self):
+        return iter(self._list)
+
+    def __bool__(self):
+        return bool(self._list)
+
+    if PY2:
+        __nonzero__ = __bool__
+
+    def __repr__(self):
+        return repr(self._list)
 
 
 class SimpleTreeMeta(zetup.meta, ABCMeta):
@@ -30,11 +64,26 @@ class SimpleTreeMeta(zetup.meta, ABCMeta):
         if mcs.context_stack is None:
 
             class meta(mcs):
-                context_stack = []
+                pass
 
         else:
             meta = mcs
-        return ABCMeta.__new__(meta, clsname, bases, clsattrs)
+        cls = ABCMeta.__new__(meta, clsname, bases, clsattrs)
+        if meta.context_stack is None:
+            meta.context_stack = ContextStack(cls)
+        return cls
+
+    @property
+    @cached
+    def root(cls):
+        class root(cls):
+
+            __module__ = cls.__module__
+            __qualname__ = "{}.root".format(qualname(cls))
+
+            _is_simpletree_root = True
+
+        return root
 
 
 class SimpleTree(with_metaclass(SimpleTreeMeta, zetup.object)):
@@ -105,15 +154,17 @@ class SimpleTree(with_metaclass(SimpleTreeMeta, zetup.object)):
     __package__ = moretools
 
     def __init__(self, parent=None):
-        if parent is None:
-            meta = type(type(self))
-            if meta.context_stack:
-                parent = meta.context_stack[-1]
-        self.parent = parent
-
         cls = type(self)
+        if parent is None and not getattr(
+                cls, '_is_simpletree_root', False):
+            meta = type(cls)
+            if meta.context_stack:
+                parent = meta.context_stack._list[-1]
+
+        self.parent = parent
         if isclass(cls.sub):
-            self.sub = cls.sub(owner=self)
+            self.sub = cls.sub(  # pylint: disable=no-value-for-parameter
+                owner=self)
 
     def root(self):
         """
@@ -127,7 +178,7 @@ class SimpleTree(with_metaclass(SimpleTreeMeta, zetup.object)):
         return tree
 
     @abstractproperty
-    def parent(self):
+    def parent(self):  # pylint: disable=method-hidden
         """
         Get and set parent tree of this sub-tree.
 
@@ -157,15 +208,19 @@ class SimpleTree(with_metaclass(SimpleTreeMeta, zetup.object)):
 
     def __enter__(self):
         meta = type(type(self))
-        meta.context_stack.append(self)
+        assert self not in meta.context_stack, (
+            "Attempt to put same instance twice into .context_stack of {!r}"
+            .format(meta))
+
+        meta.context_stack._list.append(self)
         return self
 
     def __exit__(self, *exc_info):
         meta = type(type(self))
         stack = meta.context_stack
-        assert stack and stack[-1] is self, (
+        assert stack and stack._list[-1] is self, (
             "Corrupted .context_stack of {!r}".format(meta))
 
-        meta.context_stack.pop(-1)
+        meta.context_stack._list.pop(-1)
         if exc_info[0] is not None:
             reraise(*exc_info)
