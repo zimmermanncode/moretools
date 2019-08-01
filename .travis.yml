@@ -1,3 +1,7 @@
+sudo: false
+git:
+  depth: false
+
 language: python
 python:
   - '2.7'
@@ -8,13 +12,16 @@ python:
 
 install:
   - pip install -U pip setuptools
-  - pip install -r requirements.txt
-  - pip install zetup[commands]
-  - zetup install
-  - pip install -U pytest pytest-cov
+  - pip install -U -e .
+  - pip install -U -r test-requirements.txt
   - pip install -U tox tox-travis
 
 script:
+  - pytest -vv --doctest-modules moretools test --cov moretools --cov-report term-missing
+  - tox -r -v
+
+  - pip uninstall moretools
+  - pip install zetup[all]
+  - zetup install
   # - zetup pytest
-  - python -m pytest -vv --doctest-modules moretools test --cov moretools --cov-report term-missing
   - zetup tox
