@@ -12,6 +12,8 @@ python:
 install:
   - pip install -U pip setuptools
   - pip install -U -e .
+
+  - cd test && pip uninstall moretools && cd .. && pip install -e .
   - pip install -U -r test-requirements.txt
   - pip install -U tox tox-travis
 
