@@ -10,19 +10,21 @@ python:
   - pypy
 
 install:
-  - pip install -U pip setuptools
+  - python -m pip install -U pip setuptools six
   - pip install -U -e .
 
-  - cd test && pip uninstall --yes moretools && cd .. && pip install -e .
+  - cd test && pip uninstall --yes moretools && cd ..
+  - pip install -e .
   - pip install -U -r test-requirements.txt
   - pip install -U tox tox-travis
 
 script:
-  - pytest -vv --doctest-modules moretools test --cov moretools --cov-report term-missing
+  - py.test -vv --doctest-modules moretools test --cov moretools --cov-report term-missing
   - tox -r -v
 
-  - pip uninstall moretools
+  - pip uninstall --yes moretools
   - pip install zetup[all]
   - zetup install
   # - zetup pytest
+  - zetup sdist
   - zetup tox
