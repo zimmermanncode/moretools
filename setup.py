@@ -12,7 +12,7 @@ from setuptools import setup
 dist = None
 try:
     dist = setup(
-        setup_requires=["zetup >= 0.2.57"],
+        setup_requires=["zetup >= 0.2.58"],
 
         use_zetup=True,
     )
