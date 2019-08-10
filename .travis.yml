@@ -22,7 +22,7 @@ script:
   - py.test -vv --doctest-modules moretools test --cov moretools --cov-report term-missing
   - tox -r -v
 
-  - pip uninstall --yes moretools
+  # - pip uninstall --yes moretools
   - pip install zetup[all]
   - zetup install
   # - zetup pytest
