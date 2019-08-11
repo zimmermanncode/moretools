@@ -10,7 +10,7 @@ python:
   - pypy
 
 install:
-  - python -m pip install -U pip setuptools six
+  - python -m pip install -U pip setuptools six wheel
   - pip install -U -e .
 
   - cd test && pip uninstall --yes moretools && cd ..
