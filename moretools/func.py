@@ -4,7 +4,7 @@ import types
 from doctest import DocTestParser
 from inspect import isfunction
 
-from zetup import apifunction
+# from zetup import apifunction
 
 import moretools
 
@@ -16,10 +16,10 @@ _wrapper_descriptor_type = type(type.__call__)
 
 
 #: All types of ``function`` objects.
-func_types = (types.BuiltinFunctionType, types.FunctionType, apifunction)
+func_types = (types.BuiltinFunctionType, types.FunctionType)  # , apifunction)
 
 
-@apifunction(moretools)
+#  @apifunction(moretools)
 def isfunc(obj):
     """
     Check if `obj` is a built-in/user ``function`` or ``zetup.apifunction``.
@@ -56,7 +56,7 @@ def isfunc(obj):
     return isinstance(obj, func_types)
 
 
-@apifunction(moretools)
+# @apifunction(moretools)
 def getfunc(obj):
     """
     Get the actual ``function`` object of any ``callable`` `obj`.

@@ -17,7 +17,7 @@
 
 """MOREtools >>> MORE Overly Reusable Essentials for python."""
 
-__import__('zetup').toplevel(__name__, [
+__all__ = (
     'SimpleTree',
     'StrictBool',
     'dictitems',
@@ -31,18 +31,34 @@ __import__('zetup').toplevel(__name__, [
     'qualname',
     'simpledict',
     'strictbool',
-    # TODO: fill in rest!
-], aliases={
-    # six-like aliases for dict... functions
-    'iteritems': 'dictitems',
-    'iterkeys': 'dictkeys',
-    'itervalues': 'dictvalues',
-}, deprecated_aliases={
-    'Bool': 'StrictBool',
-    'boolclass': 'strictbool',
-    'booltype': 'strictbool',
-    'isbooltype': 'isboolclass',
-})
+)
+
+# __import__('zetup').toplevel(__name__, [
+#     'SimpleTree',
+#     'StrictBool',
+#     'dictitems',
+#     'dictkeys',
+#     'dictvalues',
+#     'func_types',
+#     'getfunc',
+#     'isboolclass',
+#     'isbool',
+#     'isfunc',
+#     'qualname',
+#     'simpledict',
+#     'strictbool',
+#     # TODO: fill in rest!
+# ], aliases={
+#     # six-like aliases for dict... functions
+#     'iteritems': 'dictitems',
+#     'iterkeys': 'dictkeys',
+#     'itervalues': 'dictvalues',
+# }, deprecated_aliases={
+#     'Bool': 'StrictBool',
+#     'boolclass': 'strictbool',
+#     'booltype': 'strictbool',
+#     'isbooltype': 'isboolclass',
+# })
 
 
 def qualname(cls):

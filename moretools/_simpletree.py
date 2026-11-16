@@ -4,7 +4,7 @@ from abc import ABCMeta, abstractmethod, abstractproperty
 from inspect import isclass
 
 from six import PY2, reraise, with_metaclass
-import zetup
+# import zetup
 
 import moretools
 from moretools import qualname
@@ -14,7 +14,7 @@ from ._cached import cached
 __all__ = ('SimpleTree', )
 
 
-class ContextStack(zetup.object):
+class ContextStack:  # (zetup.object):
 
     def __init__(self, _type):
         self._list = []
@@ -45,7 +45,7 @@ class ContextStack(zetup.object):
         return repr(self._list)
 
 
-class SimpleTreeMeta(zetup.meta, ABCMeta):
+class SimpleTreeMeta(ABCMeta):  # zetup.meta, ABCMeta):
     """
     Metaclass for abstract :class:`moretools.SimpleTree`.
 
@@ -86,7 +86,7 @@ class SimpleTreeMeta(zetup.meta, ABCMeta):
         return root
 
 
-class SimpleTree(with_metaclass(SimpleTreeMeta, zetup.object)):
+class SimpleTree(metaclass=SimpleTreeMeta):  # with_metaclass(SimpleTreeMeta, zetup.object)):
     r"""
     The simple yet powerful tree creation and processing factory.
 
