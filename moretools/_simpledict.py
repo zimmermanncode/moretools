@@ -27,7 +27,7 @@ and *exception* types for invalid *key*<-->*attrname* conversions.
 """
 
 from six import with_metaclass
-import zetup
+# import zetup
 
 __all__ = [
   'SimpleDictType', 'SimpleFrozenDictType', 'SimpleDictStructType',
@@ -64,7 +64,7 @@ class AttrToKeyToAttrMismatch(LookupError):
 AttrToKeyToAttrMismatch.__name__ = 'simpledict.AttrToKeyToAttrMismatch'
 
 
-class SimpleDictMeta(zetup.meta):
+class SimpleDictMeta(type):  # zetup.meta):
     """The basic metaclass for :class:`SimpleDictType`.
 
     - Provides methods and attributes
@@ -103,7 +103,7 @@ class SimpleDictMeta(zetup.meta):
             raise AttrToKeyToAttrMismatch(attrname, key, attr_from_key)
 
 
-class SimpleDictType(with_metaclass(SimpleDictMeta, zetup.object)):
+class SimpleDictType(metaclass=SimpleDictMeta):  # with_metaclass(SimpleDictMeta, zetup.object)):
     """A simple *mapping* type providing item value access
        with `__getattr__`/`__setattr__`,
        using custom *key*<-->*attrname* conversion functions

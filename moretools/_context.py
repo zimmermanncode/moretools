@@ -29,7 +29,7 @@ from six.moves import zip
 __all__ = ['multimethod']
 
 import sys
-from inspect import getargspec
+from inspect import getfullargspec
 
 from decorator import decorator
 
@@ -59,7 +59,7 @@ def multimethod(func):
     func_name = func.__name__
     func_qualname = qualname(func)
 
-    argspec = getargspec(func)
+    argspec = getfullargspec(func)
 
     def caller(func, self, *args, **kwargs):
         if method.fenter is not None:

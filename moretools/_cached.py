@@ -26,7 +26,7 @@ The @cached decorator.
 """
 __all__ = ['cached']
 
-from inspect import getargspec
+from inspect import getfullargspec
 
 from decorator import decorator
 
@@ -34,7 +34,7 @@ from ._common import *
 
 
 def cached(func):
-    argspec = getargspec(func)
+    argspec = getfullargspec(func)
     try:  # Python >= 3.5
         varkw = argspec.varkw
     except AttributeError:
